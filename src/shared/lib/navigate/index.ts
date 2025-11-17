@@ -7,60 +7,63 @@ import { createRef } from "react";
 
 export const navigationRef = createRef<NavigationContainerRef<any>>();
 
-export function navigate(name: string, params?: object, needChecks = true) {
-  if (navigationRef.current) {
-    if (needChecks) {
-      if (typeof name === "string" && name.includes("/")) {
-        const parts = name.split("/");
-        if (parts[1] === "main") {
-          if (parts.length > 2) {
-            const screenName =
-              parts[2].charAt(0).toUpperCase() + parts[2].slice(1);
+export function navigate(
+  name: string,
+  params?: Record<string, any>,
+  needChecks = true
+) {
+  const nav = navigationRef.current;
+  if (!nav) {
+    console.warn("Навигация не инициализирована");
+    return;
+  }
 
-            let finalScreenName = screenName;
-
-            try {
-              navigationRef.current.navigate("MainStack", {
-                screen: "MainTabs",
-                params: {
-                  screen: finalScreenName,
-                  params,
-                },
-              });
-            } catch (error) {
-              console.warn(
-                `Экран ${finalScreenName} не найден, переходим на главную`
-              );
-              navigationRef.current.navigate("MainStack", {
-                screen: "MainTabs",
-                params: {
-                  screen: "Welcome",
-                },
-              });
-            }
-            return;
-          }
-          navigationRef.current.navigate("MainStack");
-          return;
-        } else if (parts[1] === "sign") {
-          const screenName = parts[2] === "up" ? "SignUp" : "SignIn";
-          navigationRef.current.navigate("SignStack", {
-            screen: screenName,
-            params,
-          });
-          return;
-        }
-      }
-    }
-
-    if (params) {
-      navigationRef.current.navigate(name, params);
+  const tryNavigateToMain = (target?: string) => {
+    if (!target) {
+      nav.navigate("MainStack");
       return;
     }
-    navigationRef.current.navigate(name);
-  } else {
-    console.warn("Навигация не инициализирована");
+
+    const finalScreen = target.charAt(0).toUpperCase() + target.slice(1);
+    try {
+      nav.navigate("MainStack", {
+        screen: "MainTabs",
+        params: { screen: finalScreen, params },
+      });
+    } catch (error) {
+      console.warn(
+        `Экран ${finalScreen} не найден, переходим на главную`,
+        error
+      );
+      nav.navigate("MainStack", {
+        screen: "MainTabs",
+        params: { screen: "Welcome" },
+      });
+    }
+  };
+
+  if (needChecks && typeof name === "string" && name.includes("/")) {
+    const parts = name.split("/");
+    const namespace = parts[1];
+    const target = parts[2];
+
+    const handlers: Record<string, () => void> = {
+      main: () => tryNavigateToMain(target),
+      sign: () => {
+        const screenName = target === "up" ? "SignUp" : "SignIn";
+        nav.navigate("SignStack", { screen: screenName, params });
+      },
+    };
+
+    const handler = handlers[namespace];
+    if (handler) {
+      handler();
+      return;
+    }
   }
+
+  if (params) nav.navigate(name, params);
+  else nav.navigate(name);
 }
 
 export function navigateBack(count: number = 1) {

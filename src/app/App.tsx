@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
+import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NotifierWrapper } from "react-native-notifier";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -13,14 +13,8 @@ import { AppNavigator } from "./router/AppNavigator";
 SplashScreen.preventAutoHideAsync();
 
 export const App = () => {
-  useEffect(() => {
-    (async () => {
-      await SplashScreen.hideAsync();
-    })();
-  }, []);
-
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <SafeAreaProvider>
         <NotifierWrapper>
           <NavigationContainer ref={navigationRef}>

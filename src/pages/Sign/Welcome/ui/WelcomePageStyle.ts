@@ -4,7 +4,6 @@ const { width, height } = Dimensions.get("window");
 
 export default StyleSheet.create({
   container: {
-    display: "flex",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -30,18 +29,6 @@ export default StyleSheet.create({
     fontSize: width * 0.035,
     color: "#555555",
   },
-  ...Platform.select({
-    ios: {
-      shadow: {},
-    },
-    android: {
-      shadow: {
-        elevation: 20,
-        textShadowOffset: { width: 0, height: 3 },
-        textShadowRadius: 6,
-      },
-    },
-  }),
 
   footer: {},
   btn: {
@@ -52,4 +39,20 @@ export default StyleSheet.create({
     fontSize: width * 0.04,
     color: "#fff",
   },
+
+  ...Platform.select({
+    ios: {
+      shadow: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 5,
+      },
+    },
+    android: {
+      shadow: {
+        elevation: 5,
+      },
+    },
+  }),
 });

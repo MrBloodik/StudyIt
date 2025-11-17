@@ -5,6 +5,8 @@ import { useAppFonts } from "@shared/lib/fonts";
 const fonts = {
   PlayfairDisplayBlack: require("assets/fonts/PlayfairDisplay-Black.ttf"),
   KingsmanHandRegular: require("assets/fonts/KingsmanHand-regular.ttf"),
+  InterSemiBold: require("assets/fonts/Inter-SemiBold.otf"),
+  InterRegular: require("assets/fonts/Inter-regular.otf"),
 };
 
 export const FontProvider: React.FC<{ children: React.ReactNode }> = ({

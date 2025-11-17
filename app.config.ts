@@ -48,6 +48,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           "This app requires access to your photo library to select images for posts.",
         NSCameraUsageDescription:
           "This app requires access to your camera to take photos for posts.",
+        ITSAppUsesNonExemptEncryption: false,
       },
     },
     android: {

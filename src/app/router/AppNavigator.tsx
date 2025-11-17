@@ -2,8 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 
-import { Welcome } from "@pages/Sign";
-import { Splash } from "@pages/Sign/Splash";
+import { SignUp, Splash, Welcome } from "@pages/Sign";
 
 export type RootStackParamList = {
   SignStack: undefined;
@@ -43,6 +42,7 @@ const SignNavigator = () => {
     >
       <SignStack.Screen name="Welcome" component={Welcome} />
       <SignStack.Screen name="Splash" component={Splash} />
+      <SignStack.Screen name="SignUp" component={SignUp} />
     </SignStack.Navigator>
   );
 };
