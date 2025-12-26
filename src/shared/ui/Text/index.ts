@@ -1,0 +1,1 @@
+export { AnimatedTypewriterText } from "./animatedTypewriterText";
