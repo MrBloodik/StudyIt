@@ -69,9 +69,10 @@ export const SignIn = () => {
             >
               <Text style={s.btnText}>Войти</Text>
             </SimpleButton>
+            {/* TODO: ADD RECOVER PASSWORD AFTER BASE LOGIC
             <Text style={s.forgotPassword} onPress={handleForgot}>
               Забыли пароль?
-            </Text>
+            </Text> */}
           </Animated.View>
         </View>
       </View>
