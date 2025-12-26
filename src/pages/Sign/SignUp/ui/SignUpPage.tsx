@@ -28,7 +28,6 @@ export const SignUp = () => {
         <Animated.View style={[s.header, AnimatedS.header]}>
           <Text style={s.title}>Регистрация</Text>
         </Animated.View>
-
         <View style={s.body}>
           <AnimatedInput
             placeholder="example@gmail.com"

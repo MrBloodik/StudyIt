@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 
 import {
+  BroWhoScreen,
   Code,
   Forgot,
   RecoverPassword,
@@ -22,6 +23,7 @@ export type SignStackParamList = {
   Splash: undefined;
   SignUp: undefined;
   SignIn: undefined;
+  BroWhoScreen: undefined;
   Forgot: undefined;
   Code: undefined;
   RecoverPassword: undefined;
@@ -55,6 +57,7 @@ const SignNavigator = () => {
       <SignStack.Screen name="Splash" component={Splash} />
       <SignStack.Screen name="SignUp" component={SignUp} />
       <SignStack.Screen name="SignIn" component={SignIn} />
+      <SignStack.Screen name="BroWhoScreen" component={BroWhoScreen} />
       <SignStack.Screen name="Forgot" component={Forgot} />
       <SignStack.Screen name="Code" component={Code} />
       <SignStack.Screen name="RecoverPassword" component={RecoverPassword} />

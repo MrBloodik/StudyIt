@@ -1,11 +1,14 @@
-import React from "react";
+// StepIndicator.js
+import React, { useEffect } from "react";
 import { Pressable, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 
 import CheckIcon from "../CheckIcon/CheckIcon";
+import s from "./StepIndicatorStyle";
 
 export default function StepIndicator({
   step,
@@ -20,71 +23,40 @@ export default function StepIndicator({
       ? "inactive"
       : "complete";
 
-  const handleClick = () => {
-    if (step !== currentStep && !disableStepIndicators) onClickStep(step);
-  };
+  // 0 = inactive, 1 = active, 2 = complete
+  const state = useSharedValue(
+    status === "inactive" ? 0 : status === "active" ? 1 : 2
+  );
+
+  useEffect(() => {
+    const to = status === "inactive" ? 0 : status === "active" ? 1 : 2;
+    state.value = withTiming(to, { duration: 300 });
+  }, [status, state]);
 
   const animatedStyle = useAnimatedStyle(() => {
-    let backgroundColor = "#222";
-    let color = "#a3a3a3";
-
-    if (status === "active") {
-      backgroundColor = "#5227FF";
-      color = "#5227FF";
-    } else if (status === "complete") {
-      backgroundColor = "#5227FF";
-      color = "#3b82f6";
-    }
-
+    // backgroundColor as interpolation
+    const bg = state.value === 0 ? "#222" : "#5227FF";
     return {
-      backgroundColor: withTiming(backgroundColor, { duration: 300 }),
       transform: [{ scale: withTiming(1, { duration: 300 }) }],
+      backgroundColor: withTiming(bg, { duration: 300 }),
     };
-  }, [status]);
+  });
+
+  const handleClick = () => {
+    if (step !== currentStep && !disableStepIndicators) {
+      onClickStep(step);
+    }
+  };
 
   return (
-    <Pressable
-      onPress={handleClick}
-      style={
-        {
-          /* stepIndicatorStyle */
-        }
-      }
-    >
-      <Animated.View
-        style={[
-          animatedStyle,
-          {
-            /* stepIndicatorInnerStyle */
-          },
-        ]}
-      >
+    <Pressable onPress={handleClick} style={s.stepIndicator}>
+      <Animated.View style={[animatedStyle, s.stepIndicatorInner]}>
         {status === "complete" ? (
-          <CheckIcon
-            style={
-              {
-                /* checkIconStyle */
-              }
-            }
-          />
+          <CheckIcon style={s.checkIcon} />
         ) : status === "active" ? (
-          <View
-            style={
-              {
-                /* activeDotStyle */
-              }
-            }
-          />
+          <View style={s.activeDot} />
         ) : (
-          <Text
-            style={
-              {
-                /* stepNumberStyle */
-              }
-            }
-          >
-            {step}
-          </Text>
+          <Text style={s.stepNumber}>{step}</Text>
         )}
       </Animated.View>
     </Pressable>

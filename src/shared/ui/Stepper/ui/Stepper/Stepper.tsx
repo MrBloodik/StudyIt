@@ -1,30 +1,34 @@
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+
 import StepConnector from "../StepConnector/StepConnector";
 import StepContentWrapper from "../StepContentWrapper/StepContentWrapper";
 import StepIndicator from "../StepIndicator/StepIndicator";
+
+import s from "./StepperStyle";
 
 export default function Stepper({
   children,
   initialStep = 1,
   onStepChange = () => {},
   onFinalStepCompleted = () => {},
-  stepCircleContainerClassName = "",
-  stepContainerClassName = "",
-  contentClassName = "",
-  footerClassName = "",
-  backButtonProps = {},
-  nextButtonProps = {},
   backButtonText = "Back",
   nextButtonText = "Continue",
+  backButtonProps = {},
+  nextButtonProps = {},
   disableStepIndicators = false,
   renderStepIndicator,
   ...rest
 }) {
-  const [currentStep, setCurrentStep] = useState(initialStep);
-  const [direction, setDirection] = useState(0);
   const stepsArray = React.Children.toArray(children);
-  const totalSteps = stepsArray.length;
+  const totalSteps = stepsArray.length || 1;
+  const safeInitial = Math.min(
+    Math.max(Number(initialStep) || 1, 1),
+    totalSteps
+  );
+  const [currentStep, setCurrentStep] = useState(safeInitial);
+  const [direction, setDirection] = useState(1); // 1 forward, -1 back
+
   const isCompleted = currentStep > totalSteps;
   const isLastStep = currentStep === totalSteps;
 
@@ -57,12 +61,9 @@ export default function Stepper({
   };
 
   return (
-    <View /* outer-container */ {...rest}>
-      <View
-      /* step-circle-container */
-      /* className kept as reference: step-circle-container ${stepCircleContainerClassName} */
-      >
-        <View /* step-indicator-row */ /* ${stepContainerClassName} */>
+    <View style={s.outerContainer} {...rest}>
+      <View style={s.stepCircleContainer}>
+        <View style={s.stepIndicatorRow}>
           {stepsArray.map((_, index) => {
             const stepNumber = index + 1;
             const isNotLastStep = index < totalSteps - 1;
@@ -73,6 +74,7 @@ export default function Stepper({
                     step: stepNumber,
                     currentStep,
                     onStepClick: (clicked) => {
+                      if (clicked === currentStep) return;
                       setDirection(clicked > currentStep ? 1 : -1);
                       updateStep(clicked);
                     },
@@ -83,6 +85,7 @@ export default function Stepper({
                     disableStepIndicators={disableStepIndicators}
                     currentStep={currentStep}
                     onClickStep={(clicked) => {
+                      if (clicked === currentStep) return;
                       setDirection(clicked > currentStep ? 1 : -1);
                       updateStep(clicked);
                     }}
@@ -100,33 +103,40 @@ export default function Stepper({
           isCompleted={isCompleted}
           currentStep={currentStep}
           direction={direction}
-          style={
-            {
-              /* step-content-default ${contentClassName} */
-            }
-          }
+          style={s.stepContentDefault}
         >
-          {stepsArray[currentStep - 1]}
+          {
+            stepsArray[
+              Math.max(0, Math.min(currentStep - 1, stepsArray.length - 1))
+            ]
+          }
         </StepContentWrapper>
 
         {!isCompleted && (
-          <View /* footer-container ${footerClassName} */>
-            <View /* footer-nav ${currentStep !== 1 ? "spread" : "end"} */>
+          <View style={s.footerContainer}>
+            <View
+              style={currentStep !== 1 ? s.footerNavSpread : s.footerNavEnd}
+            >
               {currentStep !== 1 && (
                 <Pressable
                   onPress={handleBack}
-                  /* back-button ${currentStep === 1 ? "inactive" : ""} */
+                  style={[
+                    s.backButton,
+                    currentStep === 1 ? s.backButtonInactive : null,
+                  ]}
                   {...backButtonProps}
                 >
-                  <Text>{backButtonText}</Text>
+                  <Text style={s.backButtonText}>{backButtonText}</Text>
                 </Pressable>
               )}
               <Pressable
                 onPress={isLastStep ? handleComplete : handleNext}
-                /* next-button */
+                style={s.nextButton}
                 {...nextButtonProps}
               >
-                <Text>{isLastStep ? "Complete" : nextButtonText}</Text>
+                <Text style={s.nextButtonText}>
+                  {isLastStep ? "Complete" : nextButtonText}
+                </Text>
               </Pressable>
             </View>
           </View>
@@ -137,5 +147,5 @@ export default function Stepper({
 }
 
 export function Step({ children }) {
-  return <View /* step-default */>{children}</View>;
+  return <View style={s.stepDefault}>{children}</View>;
 }

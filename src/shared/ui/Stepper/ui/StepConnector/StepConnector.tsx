@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+// StepConnector.js
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -9,11 +10,11 @@ import Animated, {
 import s from "./StepConnectorStyle";
 
 const StepConnector = ({ isComplete }) => {
-  const progress = useSharedValue(0);
+  const progress = useSharedValue(isComplete ? 1 : 0);
 
   useEffect(() => {
     progress.value = withTiming(isComplete ? 1 : 0, { duration: 400 });
-  }, [isComplete]);
+  }, [isComplete, progress]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     width: `${progress.value * 100}%`,

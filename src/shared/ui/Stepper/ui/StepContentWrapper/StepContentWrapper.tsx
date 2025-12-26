@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { LayoutChangeEvent, View } from "react-native";
+// StepContentWrapper.js
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -11,26 +12,26 @@ import SlideTransition from "../SlideTransition/SlideTransition";
 const StepContentWrapper = ({
   isCompleted,
   currentStep,
-  direction,
+  direction = 1,
   children,
   style,
 }) => {
   const height = useSharedValue(0);
   const [measuredHeight, setMeasuredHeight] = useState(0);
 
-  const onLayout = (e: LayoutChangeEvent) => {
+  const onLayout = (e) => {
     const h = e.nativeEvent.layout.height;
+    // только сохраняем, анимация по эффекту
     setMeasuredHeight(h);
-    height.value = withTiming(h, { duration: 400 });
   };
 
   useEffect(() => {
-    if (isCompleted) {
-      height.value = withTiming(0, { duration: 400 });
-    } else {
-      height.value = withTiming(measuredHeight, { duration: 400 });
+    if (measuredHeight > 0) {
+      height.value = withTiming(isCompleted ? 0 : measuredHeight, {
+        duration: 400,
+      });
     }
-  }, [isCompleted, measuredHeight]);
+  }, [isCompleted, measuredHeight, height]);
 
   const wrapperStyle = useAnimatedStyle(() => ({
     height: height.value,

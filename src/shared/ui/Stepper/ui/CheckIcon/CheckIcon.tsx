@@ -8,7 +8,7 @@ import Svg, { Path } from "react-native-svg";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-const CheckIcon = ({ size = 24, color = "#000", ...props }) => {
+const CheckIcon = ({ size = 24, color = "#fff", ...props }) => {
   const length = 24;
   const progress = useSharedValue(0);
 

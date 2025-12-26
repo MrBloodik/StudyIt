@@ -2,7 +2,7 @@ import { AppleIcon, GoogleIcon, MaxIcon } from "@shared/assets/icons/socials";
 import { Image, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 
-import { smartNavigate } from "@shared/lib/navigate";
+import { navigate, smartNavigate } from "@shared/lib/navigate";
 import s from "./SocialAuthFooterStyle";
 import useSocialAuthFooterAnimations from "./useSocialAuthFooterAnimations";
 
@@ -33,7 +33,7 @@ export default function SocialAuthFooter({ mode }: Props) {
   };
 
   const handleMaxPress = () => {
-    console.log(`${mode} через Max`);
+    navigate("BroWhoScreen");
   };
 
   return (

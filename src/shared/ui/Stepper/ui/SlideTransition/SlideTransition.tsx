@@ -1,25 +1,23 @@
-import { useEffect } from "react";
+// SlideTransition.js
+import React, { useEffect } from "react";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 
-const SlideTransition = ({ direction, children }) => {
-  const translateX = useSharedValue(direction === "forward" ? 300 : -300);
+const SlideTransition = ({ direction = 1, children }) => {
+  // direction: 1 forward (from right), -1 back (from left)
+  const translateX = useSharedValue(direction >= 1 ? 300 : -300);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    translateX.value = withTiming(0, { duration: 400 });
-    opacity.value = withTiming(1, { duration: 400 });
+    // вход
+    translateX.value = withTiming(0, { duration: 350 });
+    opacity.value = withTiming(1, { duration: 300 });
 
-    return () => {
-      translateX.value = withTiming(direction === "forward" ? -300 : 300, {
-        duration: 400,
-      });
-      opacity.value = withTiming(0, { duration: 400 });
-    };
-  }, [direction]);
+    // не анимируем выход здесь — родитель управляет unmount
+  }, [direction, translateX, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     position: "absolute",
